@@ -17,9 +17,7 @@ const ll m = 1000000000 + 7;
 ll dp[1000010];
  
 int n;
-
-ll q;
-
+ 
 ll solve(int k) {
     if (k == 0)
         return 1;
@@ -30,9 +28,8 @@ ll solve(int k) {
         if (dp[k - i] != -1)
             r = (r + dp[k - i]) % m;
         else {
-            q = solve(k - i);
-            r = (r + q) % m;
-            dp[k - i] = q;
+            dp[k - i] = solve(k - i);
+            r = (r + dp[k - i]) % m;
         }
     }
     return r;
