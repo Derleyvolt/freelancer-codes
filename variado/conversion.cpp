@@ -44,8 +44,18 @@ void dec_to_hex(int a) {
     cout << s << endl;
 }
 
+void dec_to_bi(int n) {
+    if(n == 0)
+        return;
+    int r = n % 2;
+    n /= 2;
+    dec_to_bi(n);
+    cout << r;
+}
+
 int main() {
     int d; cin >> d;
+    dec_to_bi(1542156);
     dec_to_hex(d);
     dec_to_b(d); 
     return 0;
