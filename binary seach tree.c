@@ -119,5 +119,5 @@ int main() {
     tree = remove_node(tree, 10);
 
     percorrer(tree);
-	return 0;  
+    return 0;  
 }
