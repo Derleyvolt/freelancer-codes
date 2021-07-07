@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct node {
+typedef struct DList {
     int valor;
-    struct node *prox, *ant;
+    struct DList *prox, *ant;
 } Node;
 
 Node* criar_no(int val) {
@@ -67,7 +67,7 @@ Node* remover_elemento(Node* no, int valor) {
 }
 
 int main() {
-    Node* lista_dupla = NULL;
+    DList* lista_dupla = NULL;
     for(int i = 0; i < 10; i++) {
         inserir(&lista_dupla, i+1);
     }
