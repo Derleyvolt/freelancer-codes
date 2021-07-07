@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct node {
+typedef struct Fila {
     int valor;
-    struct node *prox, *ant;
+    struct Fila *prox, *ant;
 } Node;
 
 Node* criar_no(int val) {
@@ -43,13 +43,13 @@ Node* remove_front(Node* no) {
 }
 
 int main() {
-    Node* Fila = NULL;
+    Fila* fila = NULL;
     for(int i = 0; i < 10; i++) {
-        insert_back(&Fila, i+1);
+        insert_back(&fila, i+1);
     }
 
-    Fila = remove_front(Fila);
+    fila = remove_front(fila);
 
-    Print(Fila);
+    Print(fila);
     return 0;
 }
