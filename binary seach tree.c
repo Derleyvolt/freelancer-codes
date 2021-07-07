@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct node {
+typedef struct BSTree {
     int val;
-    struct node* left, *right;
+    struct BSTree* left, *right;
 } Node;
 
 Node* criar_node(int val) {
@@ -109,14 +109,15 @@ Node* remove_node(Node* node, int val) {
 }
 
 int main() {
-	Node* no = NULL;
-	inserir(&no, 10);
-	inserir(&no, 11);
-	inserir(&no, 12);
-	inserir(&no, 13);
+    BSTree* tree = NULL;
 
-    no = remove_node(no, 10);
+    inserir(&tree, 10);
+    inserir(&tree, 11);
+    inserir(&tree, 12);
+    inserir(&tree, 13);
 
-    percorrer(no);
+    tree = remove_node(tree, 10);
+
+    percorrer(tree);
 	return 0;  
 }
