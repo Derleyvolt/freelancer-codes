@@ -36,7 +36,8 @@ Node* remove_front(Node* no) {
     if(no != NULL) {
         Node* temp = no->prox;
         free(no);
-        temp->ant = NULL;
+        if(temp != NULL)
+            temp->ant = NULL;
         return temp;
     }
 }
