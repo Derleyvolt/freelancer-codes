@@ -1,3 +1,4 @@
+  
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -25,11 +26,11 @@ void inserir(Node** no, int valor) {
     }
 }
 
-void Print(Node* no) {
+void mostrar_lista(Node* no) {
     if(no == NULL)
         return;
-    printf("%d\n", no->valor);
-    Print(no->prox);
+    mostrar_listaf("%d\n", no->valor);
+    mostrar_lista(no->prox);
 }
 
 Node* remover_elemento(Node* no, int valor) {
@@ -67,15 +68,15 @@ Node* remover_elemento(Node* no, int valor) {
 }
 
 int main() {
-    DList* lista_dupla = NULL;
+    Node* lista_dupla = NULL;
     for(int i = 0; i < 10; i++) {
         inserir(&lista_dupla, i+1);
     }
 
-    lista_dupla = remover_elemento(Fila, 1);
-    lista_dupla = remover_elemento(Fila, 7);
-    lista_dupla = remover_elemento(Fila, 10);
+    lista_dupla = remover_elemento(lista_dupla, 1);
+    lista_dupla = remover_elemento(lista_dupla, 7);
+    lista_dupla = remover_elemento(lista_dupla, 10);
 
-    Print(Fila);
+    mostrar_lista(lista_dupla);
     return 0;
 }
