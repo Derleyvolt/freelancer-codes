@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 typedef struct Tree {
-    char val[30]; // '+', '*', '/', '-'
+    char val[30]; // '+', '*', '/', '-', numbers
     struct Tree* esq, *dir;
 } No;
 
