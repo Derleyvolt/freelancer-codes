@@ -29,12 +29,12 @@ void enfileirar(Pilha** ptr, int val) {
         return;
     }
 
-    No* aux = criar_no(val);
+    No* aux  = criar_no(val);
     aux->ant = (*ptr)->final;
     (*ptr)->final = aux;
 }
 
-float desenfileirar(Pilha** ptr) {
+int desenfileirar(Pilha** ptr) {
     if((*ptr)->final != NULL) {
         No* aux       = (*ptr)->final;
         (*ptr)->final = (*ptr)->final->ant;
@@ -44,39 +44,19 @@ float desenfileirar(Pilha** ptr) {
     return 0;
 }
 
-float obter(Pilha** ptr) {
-    return (*ptr)->final->val;
+int obter(Pilha** ptr) {
+    if((*ptr)->final != NULL) {
+        return (*ptr)->final->val;
+    }
 }
 
 void liberar_pilha(Pilha** pl) {
     while(desenfileirar(pl));
 }
 
-void percorrer(Pilha** pl) {
-    if((*pl)->final == NULL) {
-        return;
-    }
-
-    No* aux = (*pl)->final;
-    while(aux != NULL) {
-        printf("%.2f\n", aux->val);
-        aux = aux->ant;
-    }
-}
-
 int pilha_vazia(Pilha** pl) {
     if((*pl)->final == NULL) {
-        return -1;
+        return 1;
     }
-    return 1;
-}
-
-int main() {
-    Pilha* ptr = inicializar();
-    enfileirar(&ptr, 10);
-
-    desenfileirar(&ptr);
-
-    printf("%p\n", ptr->final);
     return 0;
 }
