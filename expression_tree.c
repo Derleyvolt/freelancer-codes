@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 typedef struct Tree {
-    char val[30]; // '+', '*', '/', '-', numbers
+    char val[30];
     struct Tree* esq, *dir;
 } No;
 
@@ -48,7 +49,7 @@ int avaliable(No* no) {
     printf("%s\n", no->val);
 
     if(no->val[0] >= '0' && no->val[0] <= '9') {
-        return no->val[0]-'0';
+        return return atoi(no->val);
     }
 
     if(no->val[0] == '+') {
@@ -66,11 +67,11 @@ int main() {
     No* no = NULL;
 
     // 3 + 5 * 8
-    no           = criar_no_tree("+");
-    no->esq      = criar_no_tree("3");
-    no->dir      = criar_no_tree("*");
-    no->dir->esq = criar_no_tree("5");
-    no->dir->dir = criar_no_tree("8");
+    // no           = criar_no_tree("+");
+    // no->esq      = criar_no_tree("3");
+    // no->dir      = criar_no_tree("*");
+    // no->dir->esq = criar_no_tree("5");
+    // no->dir->dir = criar_no_tree("8");
 
     // 3 * (2 + 5 * 4)
     // no           = criar_no_tree("*");
@@ -80,6 +81,21 @@ int main() {
     // no->dir->dir = criar_no_tree("*");
     // no->dir->dir->esq = criar_no_tree("5");
     // no->dir->dir->dir = criar_no_tree("4");
+    
+    // ((10+21)*4-4)/(30-9)+3
+    no                          = criar_no_tree("+");
+    no->esq                     = criar_no_tree("3");
+    no->dir                     = criar_no_tree("/");
+    no->dir->esq                = criar_no_tree("-");
+    no->dir->dir                = criar_no_tree("-");
+    no->dir->dir->esq           = criar_no_tree("30");
+    no->dir->dir->dir           = criar_no_tree("9");
+    no->dir->esq->esq           = criar_no_tree("*");
+    no->dir->esq->dir           = criar_no_tree("4");
+    no->dir->esq->esq->esq      = criar_no_tree("+");
+    no->dir->esq->esq->dir      = criar_no_tree("4");
+    no->dir->esq->esq->esq->esq = criar_no_tree("10");
+    no->dir->esq->esq->esq->dir = criar_no_tree("21");
 
     int aux = avaliable(no);
     printf("%d\n", aux);
