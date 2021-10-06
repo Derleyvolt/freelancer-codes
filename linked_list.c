@@ -23,7 +23,7 @@ void insert(s_list** list, int val) {
 }
 
 int empty(s_list* list) {
-    return list != NULL;    
+    return list == NULL;    
 }
 
 int front(s_list* list) {
