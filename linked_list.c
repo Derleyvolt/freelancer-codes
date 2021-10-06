@@ -46,15 +46,32 @@ void traverse(s_list* list) {
     traverse(list->prox);
 }
 
+// O(n^2)
+void sort(s_list* list) {
+    if(list == NULL) {
+        return;
+    }
+
+    for(s_list* i = list; i != NULL; i = i->prox) {
+        for(s_list* j = i->prox; j != NULL; j = j->prox) {
+            if(j->val < i->val) {
+                int aux = i->val;
+                i->val  = j->val;
+                j->val  = aux;
+            }
+        }
+    }
+}
+
 int main() {
     s_list* list = NULL;
 
-    for(int i = 0; i < 10; i++) {
+    for(int i = 9; i >= 0; i--) {
         insert(&list, i+1);
     }
 
-    printf("%d\n", pos(list, 0));
+    sort(list);
 
-    //traverse(list);
+    traverse(list);
     return 0;
 }
