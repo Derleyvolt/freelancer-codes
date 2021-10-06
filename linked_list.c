@@ -26,6 +26,7 @@ int front(s_list* list) {
     return list->val;
 }
 
+// deixa o list nula quando eu apago o último elemento
 void pop_front(s_list** list) {
     if((*list) == NULL)
         return;
