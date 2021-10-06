@@ -22,6 +22,10 @@ void insert(s_list** list, int val) {
     insert(&(*list)->prox, val);
 }
 
+int empty(s_list* list) {
+    return list != NULL;    
+}
+
 int front(s_list* list) {
     return list->val;
 }
