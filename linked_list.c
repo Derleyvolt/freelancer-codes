@@ -48,6 +48,30 @@ int pos(s_list* list, int i) {
     return pos(list->prox, i-1);
 }
 
+s_list* erase(s_list** lista, int val) {
+    if(*lista == NULL) {
+        return NULL;
+    }
+
+    s_list* aux = *lista;
+
+    if(aux->val == val) {
+        if(aux->prox != NULL) {
+            aux->val  = aux->prox->val;
+            aux->prox = aux->prox->prox;
+            free(aux->prox);
+            return aux;
+        } else {
+            // este é o último elemento da lista
+            free(aux);
+            return NULL;
+        }
+    }
+
+    aux->prox = erase(&aux->prox, e);
+    return aux;
+}
+
 void traverse(s_list* list) {
     if(list == NULL)
         return;
@@ -73,14 +97,14 @@ void sort(s_list* list) {
 }
 
 int main() {
-    s_list* list = NULL;
+    s_list* lista = NULL;
 
-    for(int i = 9; i >= 0; i--) {
-        insert(&list, i+1);
+    for(int i = 10; i >= 0; i--) {
+        insert(&lista, i);
     }
 
-    sort(list);
+    lista = erase(&lista, 8);
 
-    traverse(list);
+    traverse(lista);
     return 0;
 }
