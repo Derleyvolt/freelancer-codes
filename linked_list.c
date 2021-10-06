@@ -13,7 +13,21 @@ s_list* create_node(int val) {
     return node;
 }
 
-void insert(s_list** list, int val) {
+void push_front(s_list** lista, int val) {
+    if(*lista == NULL) {
+        (*lista) = create_node(val);
+    } else {
+        s_list* aux   = create_node(val);
+        int a         = aux->val;
+        aux->val      = (*lista)->val;
+        (*lista)->val = a;
+
+        aux->prox      = (*lista)->prox;
+        (*lista)->prox = aux;
+    }
+}
+
+void push_back(s_list** list, int val) {
     if((*list) == NULL) {
         (*list) = create_node(val);
         return;
@@ -100,11 +114,13 @@ int main() {
     s_list* lista = NULL;
 
     for(int i = 10; i >= 0; i--) {
-        insert(&lista, i);
+        push_back(&lista, i);
     }
 
     lista = erase(&lista, 8);
 
+    push_front(&lista, -5);
+    
     traverse(lista);
     return 0;
 }
