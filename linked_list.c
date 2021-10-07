@@ -71,9 +71,10 @@ s_list* erase(s_list** lista, int val) {
 
     if(aux->val == val) {
         if(aux->prox != NULL) {
-            aux->val  = aux->prox->val;
-            aux->prox = aux->prox->prox;
-            free(aux->prox);
+            aux->val     = aux->prox->val;
+            s_list* temp = aux->prox;
+            aux->prox    = aux->prox->prox;
+            free(temp);
             return aux;
         } else {
             // este é o último elemento da lista
