@@ -46,77 +46,55 @@ int diferenca(data a, data b) {
     return dias;
 }
 
-// parseia a data no formato YYYY-MM-DD
-data pegar_data_formato3(char buf[50]) {
-    data a;
-    a.ano = a.dia = a.mes = 0;
-    int m = 1000;
-    for(int i = 0; i < 4; i++) {
-        a.ano += (buf[i]-'0')*m;
-        m = m / 10;
-    }
-
-    int mes_tam = 0;
-
-    for(int i = 5; i < 7; i++) {
-        if(buf[i] != '-') {
-            mes_tam++;
-        }
-    }
-
-    m = mes_tam == 2 ? 10 : 1;
-    for(int i = 5; i < 5+mes_tam; i++) {
-        a.mes += (buf[i]-'0')*m;
-        m = m / 10;
-    }
-
-    int sec_hif = 0;
-    int aux = 0;
-    for(int i = 0; i < strlen(buf) && aux < 2; i++) {
-        if(buf[i] == '-') {
-            aux++;
-            if(aux == 2) {
-                sec_hif = i;
-            }
-        }
-    }
-
-    m = strlen(buf)-sec_hif-1 == 2 ? 10 : 1;
-    for(int i = sec_hif+1; i < strlen(buf); i++) {
-        a.dia += (buf[i]-'0')*m;
-        m = m / 10;
-    }
-
-    return a;
-}
-
 // parseia a data no formato DD/MM/YYYY
 data pegar_data_formato1(char buf[50]) {
     data a;
-    a.ano = a.dia = a.mes = 0;
-    int dia_tam = strchr(buf, '/')-buf;
-    int m = dia_tam == 2 ? 10 : 1;
-    for(int i = 0; i < dia_tam; i++) {
-        a.dia += (buf[i]-'0')*m;
-        m = m/10;
+    char* first_symbol, *second_symbol;
+    for(int i = 0; i < strlen(buf); i++) {
+        if(buf[i] == '/') {
+            buf[i] = 0;
+            first_symbol = buf+i+1;
+            break;
+        }
     }
 
-    int mes_tam = strchr(buf+dia_tam+1, '/') - (strchr(buf, '/')+1);
-
-    m = mes_tam == 2 ? 10 : 1;
-    for(int i = dia_tam+1; i < dia_tam+1+mes_tam; i++) {
-        a.mes += (buf[i]-'0')*m;
-        m = m/10;
+    for(char* i = first_symbol+1; *i != '\0'; i++) {
+        if(*i == '/') {
+            *i = 0;
+            second_symbol = i+1;
+            break;
+        }
     }
 
-    int idx = strchr(buf+dia_tam+1, '/')-buf+1;
+    a.dia = atoi(buf);
+    a.mes = atoi(first_symbol);
+    a.ano = atoi(second_symbol);
+    return a;
+}
 
-    m = 1000;
-    for(int i = idx; i < strlen(buf); i++) {
-        a.ano += (buf[i]-'0')*m;
-        m = m/10;
+// parseia a data no formato YYYY-MM-DD
+data pegar_data_formato2(char buf[50]) {
+    data a;
+    char* first_symbol, *second_symbol;
+    for(int i = 0; i < strlen(buf); i++) {
+        if(buf[i] == '-') {
+            buf[i] = 0;
+            first_symbol = buf+i+1;
+            break;
+        }
     }
 
+    for(char* i = first_symbol+1; *i != '\0'; i++) {
+        if(*i == '-') {
+            *i = 0;
+            second_symbol = i+1;
+            break;
+        }
+    }
+
+    a.ano = atoi(buf);
+    a.mes = atoi(first_symbol);
+    a.dia = atoi(second_symbol);
     return a;
 }
 
@@ -140,7 +118,7 @@ void obter_data_formato_3() {
         buf[strlen(buf)-1] = 0;
     }
 
-    data a = pegar_data_formato3(buf);
+    data a = pegar_data_formato2(buf);
     printf("%d/%d/%d\n", a.dia, a.mes, a.ano);
 }
 
