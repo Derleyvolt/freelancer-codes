@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include <string.h>
 
+// as funções desse arquivo assumem que o usuário entra com todos os dados corretos..
+
+char meses[12][30] = { "janeiro", "fevereiro", "marco", "abril", "maio", "juior", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro" };
+
 typedef struct dt {
     int ano;
     int mes;
@@ -98,6 +102,47 @@ data pegar_data_formato2(char buf[50]) {
     return a;
 }
 
+// parseia a data no formato DD [mês-por-extenso] YYYY
+data pegar_data_formato3(char buf[50]) {
+    data a;
+    char* first_symbol, *second_symbol;
+    for(int i = 0; i < strlen(buf); i++) {
+        if(buf[i] == ' ') {
+            buf[i] = 0;
+            first_symbol = buf+i+1;
+            break;
+        }
+    }
+
+    for(char* i = first_symbol; *i != '\0'; i++) {
+        if(*i == ' ') {
+            *i = 0;
+            second_symbol = i+1;
+            break;
+        }
+    }
+
+    a.dia = atoi(buf);
+
+    // transformando em lower case
+    for(char* i = first_symbol; *i != '\0'; i++) {
+        if(*i >= 'A' && *i <= 'Z') {
+            printf("xx\n");
+            *i += 32;
+        }
+    }
+
+    for(int i = 0; i < 12; i++) {
+        if(strcmp(meses[i], first_symbol) == 0) {
+            a.mes = i+1;
+            break;
+        }
+    }
+
+    a.ano = atoi(second_symbol);
+    return a;
+}
+
 void obter_data_formato_1() {
     printf("Digite uma data no formato: DD/MM/YYYY\n");
     char buf[30];
@@ -110,7 +155,7 @@ void obter_data_formato_1() {
     printf("%d/%d/%d\n", a.dia, a.mes, a.ano);
 }
 
-void obter_data_formato_3() {
+void obter_data_formato_2() {
     printf("Digite uma data no formato: YYYY-MM-DD\n");
     char buf[30];
     fgets(buf, 30, stdin);
@@ -122,8 +167,21 @@ void obter_data_formato_3() {
     printf("%d/%d/%d\n", a.dia, a.mes, a.ano);
 }
 
+void obter_data_formato_3() {
+    printf("Digite uma data no formato: DD [mes-por-extenso] YYYY\n");
+    char buf[30];
+    fgets(buf, 30, stdin);
+    if(buf[strlen(buf)-1] == '\n') {
+        buf[strlen(buf)-1] = 0;
+    }
+
+    data a = pegar_data_formato3(buf);
+    printf("%d/%d/%d\n", a.dia, a.mes, a.ano);
+}
+
 int main() {
     obter_data_formato_1();
+    obter_data_formato_2();
     obter_data_formato_3();
     return 0;
 }
