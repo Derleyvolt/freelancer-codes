@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 // as funções desse arquivo assumem que o usuário entra com todos os dados corretos..
 
-char meses[12][30] = { "janeiro", "fevereiro", "marco", "abril", "maio", "juior", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro" };
+char meses[12][30] = { "janeiro", "fevereiro", "marco", "abril", "maio", "juior", "julho", "agosto", "setembro", "outubro", "novembro",
+                       "dezembro" };
 
 typedef struct dt {
     int ano;
@@ -143,45 +145,52 @@ data pegar_data_formato3(char buf[50]) {
     return a;
 }
 
-void obter_data_formato_1() {
-    printf("Digite uma data no formato: DD/MM/YYYY\n");
-    char buf[30];
-    fgets(buf, 30, stdin);
-    if(buf[strlen(buf)-1] == '\n') {
-        buf[strlen(buf)-1] = 0;
+void resolver() {
+    printf("Entre com duas datas em um dos formatos: [DD/MM/YYY], [YYYY-MM-DD] ou [DD (mes por extenso) YYYY]\n");
+    char str_data1[30];
+    char str_data2[30];
+    fgets(str_data1, 30, stdin);
+    fgets(str_data2, 30, stdin);
+
+    data a, b;
+
+    if(str_data1[strlen(str_data1)-1] == '\n') {
+        str_data1[strlen(str_data1)-1] = 0;
     }
 
-    data a = pegar_data_formato1(buf);
-    printf("%d/%d/%d\n", a.dia, a.mes, a.ano);
-}
-
-void obter_data_formato_2() {
-    printf("Digite uma data no formato: YYYY-MM-DD\n");
-    char buf[30];
-    fgets(buf, 30, stdin);
-    if(buf[strlen(buf)-1] == '\n') {
-        buf[strlen(buf)-1] = 0;
+    if(strchr(str_data1, '-') != NULL) {
+        a = pegar_data_formato2(str_data1);
+    } else if(strchr(str_data1, '/') != NULL) {
+        a = pegar_data_formato1(str_data1);
+    } else {
+        a = pegar_data_formato3(str_data1);
     }
 
-    data a = pegar_data_formato2(buf);
-    printf("%d/%d/%d\n", a.dia, a.mes, a.ano);
-}
-
-void obter_data_formato_3() {
-    printf("Digite uma data no formato: DD [mes-por-extenso] YYYY\n");
-    char buf[30];
-    fgets(buf, 30, stdin);
-    if(buf[strlen(buf)-1] == '\n') {
-        buf[strlen(buf)-1] = 0;
+    if(str_data2[strlen(str_data2)-1] == '\n') {
+        str_data2[strlen(str_data2)-1] = 0;
     }
 
-    data a = pegar_data_formato3(buf);
-    printf("%d/%d/%d\n", a.dia, a.mes, a.ano);
+    if(strchr(str_data2, '-') != NULL) {
+        b = pegar_data_formato2(str_data2);
+    } else if(strchr(str_data2, '/') != NULL) {
+        b = pegar_data_formato1(str_data2);
+    } else {
+        b = pegar_data_formato3(str_data2);
+    }
+
+
+    printf("A diferenca de dias entre as datas eh: %d dias\n\n", diferenca(a, b));
+
+    if(maior(a, b)) {
+        printf("A data %d/%d/%d eh maior que a data %d/%d/%d", a.dia, a.mes, a.ano, b.dia, b.mes, b.ano);
+    } else if(maior(b, a)) {
+        printf("A data %d/%d/%d eh maior que a data %d/%d/%d", b.dia, b.mes, b.ano, a.dia, a.mes, a.ano);
+    } else {
+        printf("As datas sao iguais\n");
+    }
 }
 
 int main() {
-    obter_data_formato_1();
-    obter_data_formato_2();
-    obter_data_formato_3();
+    resolver();
     return 0;
 }
