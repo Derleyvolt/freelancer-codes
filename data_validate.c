@@ -98,6 +98,55 @@ int validar_data(char buf[20]) {
     return 1;
 }
 
+int validar_hora(char buf[20]) {
+    printf("Digite uma hora\n");
+    ler_string(buf, 20);
+
+    int len = strlen(buf);
+    int aux = 0;
+    for(int i = 0; i < len; i++) {
+        if(! ((buf[i] >= '0' && buf[i] <= '9') || buf[i] == ':')) {
+            return -1;
+        }
+
+        if(buf[i] == ':') {
+            aux++;
+        }
+    }
+
+    if(aux != 1) {
+        return -1;
+    }
+
+    char* idx = strchr(buf, ':');
+
+    if(idx-buf > 2 || idx-buf < 1) {
+        return -1;
+    }
+
+    int cnt = 0;
+
+    for(char* i = idx+1; *i != 0; i++) {
+        cnt++;
+    }
+
+    if(cnt > 2 || cnt < 1) {
+        return -1;
+    }
+
+    *idx = 0;
+
+    int hora   = atoi(buf);
+    int minuto = atoi(idx+1);
+
+    if(hora > 23 || hora < 0 || minuto > 59 || minuto < 0) {
+        return -1;
+    }
+
+    *idx = ':';
+    return 1;
+}
+
 int main() {
     char buf[20];
     if(validar_data(buf) == 1) {
