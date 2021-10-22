@@ -2,6 +2,61 @@
 #include <stdlib.h>
 #include <string.h>
 
+char months[12][30] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+
+typedef struct dt {
+    int ano;
+    int mes;
+    int dia;
+} data;
+
+//preguiça de codar algo mais curto..
+data get_current_date() {
+    time_t mytime;
+    mytime = time(NULL);
+    char buf[30]; 
+    strcpy(buf, ctime(&mytime)+4);
+    data dt;
+    char month[4];
+    month[0] = buf[0];
+    month[1] = buf[1];
+    month[2] = buf[2];
+    month[3] = 0;
+
+    for(int i = 0; i < 12; i++) {
+        if(strcmp(month, months[i]) == 0) {
+            dt.mes = i + 1;
+            break;
+        }
+    }
+
+    int qtd_dig = 0;
+
+    for(int i = 4; i < strlen(buf); i++) {
+        if(buf[i] != ' ') {
+            qtd_dig++;
+        } else {
+            break;
+        }
+    }
+
+    buf[4+qtd_dig] = 0;
+
+    dt.dia = atoi(buf+4);
+
+    int idx;
+
+    for(int i = 5+qtd_dig; 1 ; i++) {
+        if(buf[i] == ' ') {
+            idx = i + 1;
+            break;
+        }
+    }
+
+    dt.ano = atoi(buf+idx);
+    return dt;
+}
+
 void tirar_newline(char buf[20]) {
     if(buf[strlen(buf)-1] == '\n') {
         buf[strlen(buf)-1] = 0;
