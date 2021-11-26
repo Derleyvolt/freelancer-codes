@@ -4,37 +4,37 @@
 typedef struct Fila {
     int valor;
     struct Fila *prox, *ant;
-} Node;
+} Fila;
 
-Node* criar_no(int val) {
-    Node* no  = (Node*)malloc(sizeof(Node));
+Fila* criar_no(int val) {
+    Fila* no  = (Fila*)malloc(sizeof(Fila));
     no->valor = val;
     no->prox  = NULL;
     no->ant   = NULL;
     return no;
 }
 
-void insert_back(Node** no, int valor) {
+void inserir(Fila** no, int valor) {
     if((*no) == NULL) {
         (*no) = criar_no(valor);
     } else if((*no)->prox == NULL) {
         (*no)->prox = criar_no(valor);
         (*no)->prox->ant = (*no);
     } else {
-        insert_back(&(*no)->prox, valor);
+        inserir(&(*no)->prox, valor);
     }
 }
 
-void Print(Node* no) {
+void mostrar(Fila* no) {
     if(no == NULL)
         return;
     printf("%d\n", no->valor);
     Print(no->prox);
 }
 
-Node* remove_front(Node* no) {
+Fila* remover(Fila* no) {
     if(no != NULL) {
-        Node* temp = no->prox;
+        Fila* temp = no->prox;
         free(no);
         if(temp != NULL)
             temp->ant = NULL;
@@ -45,11 +45,11 @@ Node* remove_front(Node* no) {
 int main() {
     Fila* fila = NULL;
     for(int i = 0; i < 10; i++) {
-        insert_back(&fila, i+1);
+        inserir(&fila, i+1);
     }
 
-    fila = remove_front(fila);
+    fila = remover(fila);
 
-    Print(fila);
+    mostrar(fila);
     return 0;
 }
