@@ -29,27 +29,47 @@ void mostrar(Fila* no) {
     if(no == NULL)
         return;
     printf("%d\n", no->valor);
-    Print(no->prox);
+    mostrar(no->prox);
 }
 
-Fila* remover(Fila* no) {
-    if(no != NULL) {
-        Fila* temp = no->prox;
-        free(no);
-        if(temp != NULL)
-            temp->ant = NULL;
-        return temp;
+// Fila* remover(Fila* no) {
+//     if(no != NULL) {
+//         Fila* temp = no->prox;
+//         free(no);
+//         if(temp != NULL)
+//             temp->ant = NULL;
+//         return temp;
+//     }
+// }
+
+int remover(Fila** no) {
+    if(*no != NULL) {
+        if((*no)->prox == NULL) {
+            int val = (*no)->valor;
+            *no     = NULL;
+            return val;
+        }
+
+        Fila* aux    = (*no)->prox;
+        int val      = (*no)->valor;
+        (*no)->valor = (*no)->prox->valor;
+        (*no)->prox  = (*no)->prox->prox;
+        free(aux);
+        return val;
     }
+
+    return -1; 
 }
 
 int main() {
     Fila* fila = NULL;
-    for(int i = 0; i < 10; i++) {
+    for(int i = 0; i < 5; i++) {
         inserir(&fila, i+1);
     }
 
-    fila = remover(fila);
+    while(fila != NULL) {
+        printf("%d ", remover(&fila));
+    }
 
-    mostrar(fila);
     return 0;
 }
