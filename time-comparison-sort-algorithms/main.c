@@ -27,21 +27,12 @@ void calcular_tempo(int n, int vezes) {
     int aux = vezes;
 
     while(aux--) {
-		int j;
+	int j;
         for(int i = n-1, j = 0; i >= 0; i--, j++) {
             arr1[j] = i;
-        }
-
-        for(int i = n-1, j = 0; i >= 0; i--, j++) {
-            arr2[j] = i;
-        }
-
-        for(int i = n-1, j = 0; i >= 0; i--, j++) {
+	    arr2[j] = i;
             arr3[j] = i;
-        }
-
-        for(int i = n-1, j = 0; i >= 0; i--, j++) {
-            arr4[j] = i;
+	    arr4[j] = i;
         }
 
         clock_t t;
