@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define max(a, b) (a > b ? a : b)
+
 typedef struct BSTree {
     int val;
     struct BSTree* left, *right;
@@ -40,13 +42,33 @@ int buscar(Node* no, int val) {
         return buscar(no->left, val);
 }
 
-Node* apagar(Node* node, int val) {
-	if(node == NULL)
-		return NULL;
-	if(node->val == val) {
-		
-	}
+// CHECAR SE É BALANCEADA É ÚTIL EM ALGUNS CENÁRIOS..
+
+int height(Node* no) {
+    if(no == NULL) {
+        return 0;
+    }
+
+    return max(height(no->right), height(no->left)) + 1;
 }
+
+int isBalanced(Node* root) {
+    int lh; 
+    int rh; 
+ 
+    if (root == NULL)
+        return 1;
+ 
+    lh = height(root->left);
+    rh = height(root->right);
+ 
+    if (abs(lh - rh) <= 1 && isBalanced(root->left) && isBalanced(root->right))
+        return 1;
+ 
+    return 0;
+}
+
+/////////////////////////////////////////
 
 void percorrer(Node* node) {
     if(node == NULL)
