@@ -9,10 +9,11 @@ typedef struct BSTree {
 } Node;
 
 Node* criar_node(int val) {
-    Node* no = (Node*)malloc(sizeof(Node));
-    no->val  = val;
-    no->left  = NULL;
+    Node* no   = (Node*)malloc(sizeof(Node));
+    no->val    = val;
+    no->left   = NULL;
     no->right  = NULL;
+    return no;
 }
 
 void inserir(Node** no, int val) {
