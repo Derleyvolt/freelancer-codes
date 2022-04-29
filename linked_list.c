@@ -33,7 +33,7 @@ void push_back(s_list** list, int val) {
         return;
     }
 
-    insert(&(*list)->prox, val);
+    push_back(&(*list)->prox, val);
 }
 
 int empty(s_list* list) {
@@ -109,6 +109,16 @@ void sort(s_list* list) {
             }
         }
     }
+}
+
+int buscar(s_list* ls, int val) {
+    if(ls == NULL) {
+        return;
+    }
+    if(ls->val == val) {
+        return 1;
+    }
+    return buscar(ls->prox, val);
 }
 
 int main() {
