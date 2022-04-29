@@ -121,6 +121,13 @@ s_list* l_search(s_list* ls, int val) {
     return l_search(ls->prox, val);
 }
 
+int length(s_list* ls) {
+    if(ls == NULL) {
+        return 0;
+    }
+    return 1 + length(ls->prox);
+}
+
 int main() {
     s_list* lista = NULL;
 
