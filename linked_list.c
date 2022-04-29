@@ -111,14 +111,14 @@ void sort(s_list* list) {
     }
 }
 
-s_list* buscar(s_list* ls, int val) {
+s_list* l_search(s_list* ls, int val) {
     if(ls == NULL) {
         return NULL;
     }
     if(ls->val == val) {
         return ls;
     }
-    return buscar(ls->prox, val);
+    return l_search(ls->prox, val);
 }
 
 int main() {
