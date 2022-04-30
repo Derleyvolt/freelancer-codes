@@ -43,33 +43,6 @@ int search(Hash* h, int k) {
 }
 
 int main() {
-	int n; scanf("%d", &n);
-
-	int caso = 0;
-
-	while(n--) {
-		int m, c; scanf("%d%d", &m, &c);
-		Hash hash;
-		initialize_hash(&hash, m);
-		while(c--) {
-			int k;
-			scanf("%d", &k);
-			insert(&hash, k);
-		}
-
-		printf("\n\ncaso %d:\n\n", caso);
-
-		for(int i = 0; i < m; i++) {
-			printf("tabela[%d]: ", i);
-			traverse(hash.base[i]);
-			printf("\n");
-		}
-	}
-
-	return 0;
-}
-
-int main() {
     Hash hs;
     initialize_hash(&hs, 10);
     insert(&hs, 10);
