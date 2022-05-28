@@ -45,11 +45,9 @@ Arv* rotacao_esq(Arv* raiz) {
     return aux;
 }
 
-Arv* inserir(Arv** arv, int dado) {
-    Arv* root = *arv;
+Arv* inserir(Arv* root, int dado) {
     if(root == NULL) {
-        (*arv) = criar_no(dado);
-        return (*arv);
+        return criar_no(dado);
     }
 
     if(root->dado > dado) {
@@ -57,14 +55,14 @@ Arv* inserir(Arv** arv, int dado) {
         // portanto se a subarvore root->esq rotaciona
         // root precisa atualizar root->esq pra apontar pra
         // um novo nó (a nova raiz da subarvore apontada por ele)
-        root->esq = inserir(&root->esq, dado);
+        root->esq = inserir(root->esq, dado);
         if(abs(altura(root->esq) - altura(root->dir)) >= 2) {
             // o desbalanceamento com ctz aconteceu na subárvore
             // à esquerda
             root = rotacao_dir(root);
         }
     } else if(root->dado < dado) {
-        root->dir = inserir(&root->dir, dado);
+        root->dir = inserir(root->dir, dado);
 
         if(abs(altura(root->esq) - altura(root->dir)) >= 2) {
             // o desbalanceamento com ctz aconteceu na subárvore
@@ -92,7 +90,7 @@ void percorrer(Arv* root) {
 int main() {
     Arv* arv = NULL;
     for(int i = 0; i < 200; i++) {
-        arv = inserir(&arv, i+1);
+        arv = inserir(arv, i+1);
     }
 
     percorrer(arv);
