@@ -80,7 +80,7 @@ Arv* encontrar_min(Arv* root) {
         return root;
     }
 
-    encontrar_min(root->esq);
+    return encontrar_min(root->esq);
 }
 
 Arv* inserir(Arv* root, int dado) {
