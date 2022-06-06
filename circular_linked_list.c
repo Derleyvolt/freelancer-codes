@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 typedef struct lista_circular {
     struct lista_circular* prox;
@@ -14,8 +15,8 @@ typedef struct lista {
 lista* iniciar_lista() {
     lista* ls = (lista*)malloc(sizeof(lista));
     ls->tamanho = 0;
-    ls->inicio  = 0;
-    ls->final   = 0;
+    ls->inicio  = NULL;
+    ls->final   = NULL;
     return ls;
 }
 
@@ -26,75 +27,93 @@ lista_circular* criar_no(int dado) {
     return ls;
 }
 
-
-lista_circular* inserir(lista_circular* ls, int dado) {
-    if(ls == NULL) {
-        ls = criar_no(dado);
-        return ls;
-    }
-
-    if(ls->valor < dado) {
-        ls->prox = inserir(ls->prox, dado);
-    } else {
-        lista_circular* temp = criar_no(dado);
-        temp->prox = ls;
-        return temp;
-    }
-}
-
-void inserir_dado(lista* ls, int dado) {
-    if(ls->tamanho == 0) {
-        ls->final = inserir(&ls->inicio, dado);
-    } else {
-        lista_circular* aux = inserir(&ls->inicio, dado);
-        if(ls->final->prox != ls->inicio) {
-            ls->final = ls->final->prox;
+int buscar(lista* list, int dado) {
+    lista_circular* aux = list->inicio;
+    for(int i = 0; i < list->tamanho; i++) {
+        if(aux->valor == dado) {
+            return 1;
         }
-    }
 
-    ls->tamanho++;
-}
-
-lista_circular* remover(lista_circular* ls, int dado, lista_circular* final, int* flag) {
-    if(ls->valor == dado) {
-        *flag = 1;
-        lista_circular* aux = ls->prox;
-        free(ls);
-        return aux;
-    } else if(ls != final) {
-        ls->prox = remover(ls->prox, dado, final, flag);
-    } else {
-        return final;
-    }
-}
-
-lista_circular* remover(lista_circular* ls, int dado, lista_circular* final, int* flag) {
-    lista_circular* aux = ls, *temp = NULL;
-    while(aux != NULL && aux->valor != dado) {
-        temp = aux;
         aux = aux->prox;
     }
 
+    return 0;
+}
+
+void percorrer(lista* list, int start) {
+    if(start >= list->tamanho) {
+        return;
+    }
+
+    lista_circular* aux = list->inicio;
+
+    for(int i = 0; i < start; i++) {
+        aux = aux->prox;
+    }
+
+    for(int i = 0; i < list->tamanho; i++) {
+        printf("%d ", aux->valor);
+        aux = aux->prox;
+    }
+
+    printf("\n");
+}
+
+void inserir(lista* list, int dado) {
+    lista_circular* aux = list->inicio;
     if(aux == NULL) {
-        return final;
+        list->inicio = criar_no(dado);
+        list->final  = list->inicio;
+        list->tamanho++;
+        return;
     }
 
-    if(aux != NULL) {
-        
+    aux = list->inicio;
+
+    while(aux != list->final) {
+        aux  = aux->prox;
     }
+
+    aux->prox        = criar_no(dado);
+    list->final      = aux->prox;
+    aux->prox->prox  = list->inicio;
+    list->tamanho++;
 }
 
-int remover_dado(lista* ls, int dado) {
-    int flag = 0;
-    if(ls->tamanho > 0) {
-        lista_circular* aux = remover(ls, dado, ls->final, &flag);
-        if(ls->final)
-    } else {
-        return 0;
+void remover(lista* list, int dado) {
+    lista_circular* aux = list->inicio, *temp = list->final;
+
+    for(int i = 0; i < list->tamanho; i++) {
+        if(aux->valor == dado) {
+            temp->prox  = aux->prox;
+
+            if(aux == list->inicio) {
+                list->inicio = aux->prox;
+            }
+
+            if(aux == list->final) {
+                list->final = temp;
+            }
+
+            free(aux);
+            list->tamanho--;
+            return;
+        }
+
+        temp = aux;
+        aux = aux->prox;
     }
-}
+}   
 
 int main() {
+    lista* list = iniciar_lista();
 
+    for(int i = 0; i < 10; i++) {
+        inserir(list, i+1);
+    }
+
+    remover(list, 6);
+    
+    percorrer(list, 5);
     return 0;
 }
