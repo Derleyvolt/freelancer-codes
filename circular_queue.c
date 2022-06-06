@@ -1,53 +1,60 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define MAXN 100
+#define MAXN 10
 
-typedef struct FILA {
+typedef struct queue {
     int vet[MAXN];
-    int head, tail, tamanho;
-}FILA;
+    int head, tail, len;
+} queue;
 
-FILA* inicializar() {
-    FILA* f = (FILA*)malloc(sizeof(FILA));
-    f->head    = 0; 
-    f->tail    = 0;
-    f->tamanho = 0;
-    return f;
+queue inicialize_queue() {
+    queue q;
+    q.head = 0; 
+    q.tail = 0;
+    q.len  = 0;
+    return q;
 }
 
-void inserir(FILA* f, int x) {
-    if(f->tamanho >= MAXN) {
+void insert(queue* q, int x) {
+    if(q->len >= MAXN) {
         return;
     }
 
-    f->vet[f->tail] = x;
-    f->tamanho++;
-    f->tail = (f->tail + 1) % MAXN;
+    q->vet[q->tail] = x;
+    q->len++;
+    q->tail = (q->tail + 1) % MAXN;
 }
 
-void deletar(FILA* f) {
-    if(f->tamanho > 0) {
-        f->head = (f->head + 1) % MAXN;
+void erase(queue* q) {
+    if(q->len > 0) {
+        q->head = (q->head + 1) % MAXN;
+        q->len--;
     }
 }
 
-void mostrar(FILA* f) {
-    int l = f->head;
-    while(l != f->tail) {
-        printf("%d ", f->vet[l]);
-        l = (l + 1) % MAXN;
+void traverse(queue* q) {
+    int ptr = q->head;
+    for(int i = 0; i < q->len; i++) {
+        printf("%d ", q->vet[(ptr + i) % MAXN]);
     }
+}
+
+int front(queue* q) {
+    return q->vet[q->head];
 }
 
 int main() {
-    FILA* f;
-    f = inicializar();
+    queue q;
+    q = inicialize_queue();
 
     for(int i = 0; i < 10; i++) {
-        inserir(f, i+1);
+        insert(&q, i+1);
     }
 
-    mostrar(f);
+    erase(&q);
+    insert(&q, 100);
+
+    traverse(&q);
     return 0;
 }
