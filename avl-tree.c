@@ -1,205 +1,206 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #define max(a, b) (a > b ? a : b)
 
-typedef struct Arv {
-    int dado;
-    struct Arv* esq;
-    struct Arv* dir;
-    int altura;
-} Arv;
+typedef struct Tree {
+    int data;
+    struct Tree* left;
+    struct Tree* right;
+    int height;
+} Tree;
 
-Arv* criar_no(int dado) {
-    Arv* aux    = (Arv*)malloc(sizeof(Arv));
-    aux->esq    = NULL;
-    aux->dir    = NULL;
-    aux->dado   = dado;
-    aux->altura = 0;
+Tree* create_node(int data) {
+    Tree* aux    = (Tree*)malloc(sizeof(Tree));
+    aux->left    = NULL;
+    aux->right   = NULL;
+    aux->data    = data;
+    aux->height  = 1;
     return aux;
 }
 
-int altura(Arv* raiz) {
-    if(raiz == NULL)
-        return -1;
-    return max(altura(raiz->dir), altura(raiz->esq)) + 1;
-}
-
-Arv* rotacao_dir(Arv* raiz) {
-    Arv* aux   = raiz->esq;
-    raiz->esq  = aux->dir;
-    aux->dir   = raiz;
-
-    raiz->altura = altura(raiz);
-    aux->altura  = altura(aux);
-    return aux;
-}
-
-Arv* rotacao_esq(Arv* raiz) {
-    Arv* aux   = raiz->dir;
-    raiz->dir  = aux->esq;
-    aux->esq   = raiz;
-
-    raiz->altura  = altura(raiz);
-    aux->altura   = altura(aux);
-    return aux;
-}
-
-Arv* rotacao_esq_dir(Arv* raiz) {
-    raiz->esq = rotacao_esq(raiz->esq);
-    //Arv* aux = rotacao_esq(raiz->esq);
-    return rotacao_dir(raiz);
-}
-
-Arv* rotacao_dir_esq(Arv* raiz) {
-    raiz->dir = rotacao_dir(raiz->dir);
-    //Arv* aux = rotacao_dir(raiz->dir);
-    return rotacao_esq(raiz);
-}
-
-int balanceamento(Arv* root) {
-    if(root == NULL)
-        return 0;
-    return altura(root->esq) - altura(root->dir);
-}
-
-int obter_altura(Arv* raiz) {
+int get_height(Tree* raiz) {
     if(raiz == NULL) {
         return 0;
     }
 
-    return raiz->altura;
+    return raiz->height;
 }
 
-Arv* encontrar_min(Arv* root) {
+Tree* right_rotation(Tree* raiz) {
+    Tree* aux    = raiz->left;
+    raiz->left   = aux->right;
+    aux->right   = raiz;
+
+    raiz->height = max(get_height(raiz->left), get_height(raiz->right))+1;
+    aux->height  = max(get_height(aux->left), get_height(aux->right))+1;
+    return aux;
+}
+
+Tree* left_rotation(Tree* raiz) {
+    Tree* aux    = raiz->right;
+    raiz->right  = aux->left;
+    aux->left    = raiz;
+
+    raiz->height = max(get_height(raiz->left), get_height(raiz->right))+1;
+    aux->height  = max(get_height(aux->left), get_height(aux->right))+1;
+    return aux;
+}
+
+Tree* left_right_rotation(Tree* raiz) {
+    raiz->left = left_rotation(raiz->left);
+    return right_rotation(raiz);
+}
+
+Tree* right_left_rotation(Tree* raiz) {
+    raiz->right = right_rotation(raiz->right);
+    return left_rotation(raiz);
+}
+
+int balanced(Tree* root) {
+    if(root == NULL)
+        return 0;
+    return get_height(root->left) - get_height(root->right);
+}
+
+Tree* find_min(Tree* root) {
     if(root == NULL) {
         return NULL;
     }
 
-    if(root->esq == NULL) {
+    if(root->left == NULL) {
         return root;
     }
 
-    return encontrar_min(root->esq);
+    return find_min(root->left);
 }
 
-Arv* inserir(Arv* root, int dado) {
+Tree* insert(Tree* root, int data) {
     if(root == NULL) {
-        return criar_no(dado);
+        return create_node(data);
     }
 
-    if(root->dado > dado) {
+    if(root->data > data) {
         // após uma rotação a subárvore terá uma nova raiz.
-        // portanto se a subarvore root->esq rotaciona
-        // root precisa atualizar root->esq pra apontar pra
+        // portanto se a subarvore root->left rotaciona
+        // root precisa atualizar root->left pra apontar pra
         // um novo nó (a nova raiz da subarvore apontada por ele)
-        root->esq = inserir(root->esq, dado);
+        root->left = insert(root->left, data);
 
-        if(abs(balanceamento(root)) >= 2) {
+        if(abs(balanced(root)) >= 2) {
             // o desbalanceamento com ctz aconteceu na subárvore
             // à esquerda
-            if(balanceamento(root->esq) == -1) {
-                root = rotacao_esq_dir(root);
+            if(balanced(root->left) == -1) {
+                root = left_right_rotation(root);
             } else {
-                root = rotacao_dir(root);
+                root = right_rotation(root);
             }
         }
-    } else if(root->dado < dado) {
-        root->dir = inserir(root->dir, dado);
+    } else if(root->data < data) {
+        root->right = insert(root->right, data);
 
-        if(abs(balanceamento(root)) >= 2) {
+        if(abs(balanced(root)) >= 2) {
             // o desbalanceamento com ctz aconteceu na subárvore
             // à direita
-            if(balanceamento(root->dir) == 1) {
-                root = rotacao_dir_esq(root);
+            if(balanced(root->right) == 1) {
+                root = right_left_rotation(root);
             } else {
-                root = rotacao_esq(root);
+                root = left_rotation(root);
             }
         }
     }
     
-    // atualizo a altura e retorno
-    root->altura = max(obter_altura(root->dir), obter_altura(root->esq)) + 1;
+    // atualizo a height e retorno
+    root->height = max(get_height(root->right), get_height(root->left)) + 1;
     return root;
 }   
 
-Arv* remover(Arv** arv, int dado) {
-    Arv* root = *arv;
+Tree* remove_(Tree** arv, int data) {
+    Tree* root = *arv;
     if(root == NULL) {
         return NULL;
     }
 
-    if(root->dado > dado) {
-        root->esq = remover(&root->esq, dado);
-        if(abs(balanceamento(root)) >= 2) {
-            // sei que removi alguém da minha direita 
-            if(balanceamento(root->dir) == 1) {
-                root = rotacao_dir_esq(root);
-            } else {
-                root = rotacao_esq(root);
-            }
+    if(root->data > data) {
+        root->left = remove_(&root->left, data);
+        if(abs(balanced(root)) >= 2) {
+            // sei que removi alguém da minha esquerda 
+            root = balanced(root->right) == 1 ? right_left_rotation(root) : left_rotation(root);
         }
-    } else if(root->dado < dado) {
-        root->dir = remover(&root->dir, dado);
-        if(abs(balanceamento(root)) >= 2) {
+    } else if(root->data < data) {
+        root->right = remove_(&root->right, data);
+        if(abs(balanced(root)) >= 2) {
             // sei que removi alguém da minha direita
-            if(balanceamento(root->esq) == -1) {
-                root = rotacao_esq_dir(root);
-            } else {
-                root = rotacao_dir(root);
-            }
+            root = balanced(root->left) == -1 ? left_right_rotation(root) : right_rotation(root);
         }
     } else {
-        if(root->esq == NULL || root->dir == NULL) {
-            if(root->esq == NULL) {
-                Arv* aux = root->dir;
-                free(root);
-                return aux;
-            }
-
-            if(root->dir == NULL) {
-                Arv* aux = root->esq;
-                free(root);
-                return aux;
-            }
+        if(root->left == NULL || root->right == NULL) {
+            Tree* aux = root->left == NULL ? root->right : root->left;
+            free(root);
+            return aux;
         }
 
-        Arv* aux   = encontrar_min(root->dir);
-        root->dado = aux->dado;
-        root->dir  = remover(&root->dir, root->dado);
+        Tree* aux   = find_min(root->right);
+        root->data  = aux->data;
+        root->right = remove_(&root->right, root->data);
+
+        // essa checagem é necessária, pois eu removi alguém à minha
+        if(abs(balanced(root)) >= 2) {
+            root = balanced(root->left) == -1 ? left_right_rotation(root) : right_rotation(root);
+        }
     }
 
-    root->altura = max(obter_altura(root->dir), obter_altura(root->esq)) + 1;
+    root->height = max(get_height(root->right), get_height(root->left)) + 1;
     return root;
 }
 
-void percorrer(Arv* root) {
+void inOrder_traverse(Tree* root) {
     if(root == NULL) return;
-    percorrer(root->esq);
-    printf("%d\n", root->dado);
-    percorrer(root->dir);
+    inOrder_traverse(root->left);
+    printf("%d\n", root->data);
+    inOrder_traverse(root->right);
 }   
 
-void percorrer_in_order(Arv* root) {
+void preOrder_traverse(Tree* root) {
     if(root == NULL) return;
-    printf("%d\n", root->dado);
-    percorrer_in_order(root->esq);
-    percorrer_in_order(root->dir);
+    preOrder_traverse(root->left);
+    printf("%d\n", root->data);
+    preOrder_traverse(root->right);
+}
+
+int is_not_balanced_tree(Tree* root) {
+    if(root == NULL) {
+        return 0;
+    }
+
+    if(abs(balanced(root)) >= 2) {
+        return 1;
+    }
+
+    int a = is_not_balanced_tree(root->left);
+    int b = is_not_balanced_tree(root->right);
+
+    return a + b;
 }
 
 int main() {
-    Arv* arv = NULL;
+    Tree* arv = NULL;
 
-    for(int i = 0; i < 3000; i++) {
-        arv = inserir(arv, i+1);
+    srand(time(NULL));
+
+    for(int i = 1; i <= 10000; i++) {
+        arv = insert(arv, rand() % 50000);
     }
 
-    for(int i = 1; i < 3000; i++) {
-        if(i != 200)
-            arv = remover(&arv, i+1);
+    for(int i = 1; i <= 10000; i++) {
+        if(i % 2 != 0)
+            arv = remove_(&arv, i);
     }
 
-    printf("Altura: %d\n\n", obter_altura(arv));
-    percorrer_in_order(arv);
+    preOrder_traverse(arv);
+    printf("\n\nAltura: %d\n\n", get_height(arv));
+
+    printf("\n\n%d\n", !is_not_balanced_tree(arv));
     return 0;
 }
