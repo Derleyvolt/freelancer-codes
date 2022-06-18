@@ -28,7 +28,6 @@ void inserir(arv** rz, int key) {
         *rz = temp;
         return;
     }
-
     arv* atual = raiz;
     arv* prev  = NULL;
 
