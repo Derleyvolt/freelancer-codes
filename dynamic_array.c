@@ -38,7 +38,7 @@ void push_back(array* arr, data val) {
     arr->length++;
 }
 
-void push_pop(array* arr) {
+void pop_back(array* arr) {
     arr->length = arr->length - (arr->length > 0);
 }
 
